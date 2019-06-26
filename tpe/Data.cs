@@ -28,7 +28,7 @@ namespace tpe
                 return false;
         }
 
-        public bool Close(uint id)
+        public bool Close(uint id, Time time)
         {
             Record temp = Find(id);
             if (temp != null)
@@ -38,6 +38,18 @@ namespace tpe
             }
             else
                 return false;
+        }
+
+        public bool Close(uint id)
+        {
+           /* Record temp = Find(id);
+            if (temp != null)
+            {
+                records[records.IndexOf(temp)].RealWorkTime = time;
+                return true;
+            }
+            else
+                return false;*/
         }
 
         public bool Remove(Record record)
