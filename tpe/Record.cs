@@ -6,8 +6,8 @@ namespace tpe
     {
         public uint Id { get; set; }
         public DateTimeOffset StartDate { get; set; }
-        public Time PlannedWorkTime { get; set; }
-        public Time RealWorkTime { get; set; }
+        public TimeParser PlannedWorkTime { get; set; }
+        public TimeParser RealWorkTime { get; set; }
         public double? Inaccuracy 
         {
             get 
@@ -19,7 +19,7 @@ namespace tpe
             }
         }
 
-        public Record(uint id, DateTimeOffset date, Time planned, Time real = default)
+        public Record(uint id, DateTimeOffset date, TimeParser planned, TimeParser real = default)
         {
             Id = id;
             StartDate = date;
@@ -27,7 +27,7 @@ namespace tpe
             RealWorkTime = real;
         }
 
-        public Record(uint id, Time planned, Time real = default)
+        public Record(uint id, TimeParser planned, TimeParser real = default)
         {
             Id = id;
             StartDate = DateTimeOffset.Now;

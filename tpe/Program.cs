@@ -40,8 +40,8 @@ namespace tpe
                 && Regex.IsMatch(args[1], regexFlag)
                 && uint.TryParse(args[2], out uint id)
                 && DateTime.TryParse(args[3], out DateTime date)
-                && Time.TryParse(args[4], out Time planned)
-                && Time.TryParse(args[5], out Time real))
+                && TimeParser.TryParse(args[4], out TimeParser planned)
+                && TimeParser.TryParse(args[5], out TimeParser real))
             {
                 if (data.Open(new Record(id, date, planned, real)))
                     data.ToFile();
@@ -52,7 +52,7 @@ namespace tpe
                 && Regex.IsMatch(args[1], regexFlag)
                 && uint.TryParse(args[2], out id)
                 && DateTime.TryParse(args[3], out date)
-                && Time.TryParse(args[4], out planned))
+                && TimeParser.TryParse(args[4], out planned))
             {
                 if (data.Open(new Record(id, date, planned)))
                     data.ToFile();
@@ -61,8 +61,8 @@ namespace tpe
             }
             else if (args.Length == 4
                 && uint.TryParse(args[1], out id)
-                && Time.TryParse(args[2], out planned)
-                && Time.TryParse(args[3], out real))
+                && TimeParser.TryParse(args[2], out planned)
+                && TimeParser.TryParse(args[3], out real))
             {
                 if (data.Open(new Record(id, planned, real)))
                     data.ToFile();
@@ -71,7 +71,7 @@ namespace tpe
             }
             else if (args.Length == 3
                 && uint.TryParse(args[1], out id)
-                && Time.TryParse(args[2], out planned))
+                && TimeParser.TryParse(args[2], out planned))
             {
                 if (data.Open(new Record(id, planned)))
                     data.ToFile();
@@ -88,7 +88,7 @@ namespace tpe
             {
                 if (args.Length == 3 
                     && uint.TryParse(args[1], out uint id)
-                    && Time.TryParse(args[2], out Time real))
+                    && TimeParser.TryParse(args[2], out TimeParser real))
                 {
                     if (data.Close(id, real))
                     {

@@ -28,7 +28,7 @@ namespace tpe
                 return false;
         }
 
-        public bool Close(uint id, Time time)
+        public bool Close(uint id, TimeParser time)
         {
             Record temp = Find(id);
             if (temp != null)
@@ -45,7 +45,7 @@ namespace tpe
             Record temp = Find(id);
             if (temp != null)
             {
-                Time time = new Time();
+                TimeParser time = new TimeParser();
                 DateTime startDate = temp.StartDate.LocalDateTime;
                 DateTime endDate = DateTimeOffset.Now.LocalDateTime;
                 if (startDate.Date != endDate.Date)
@@ -59,9 +59,9 @@ namespace tpe
                 return false;
         }
 
-        private Time GetTimeFromSameDate(DateTime startDate, DateTime endDate)
+        private TimeParser GetTimeFromSameDate(DateTime startDate, DateTime endDate)
         {
-            Time time = new Time();
+            TimeParser time = new TimeParser();
             TimeSpan tempTS = startDate.Date.AddHours(19).Subtract(startDate);
             time.Hours += tempTS.Hours;
             time.Minutes += tempTS.Minutes;
@@ -79,9 +79,9 @@ namespace tpe
             return time;
         }
 
-        private Time GetTimeFromOtherDate(DateTime startDate, DateTime endDate)
+        private TimeParser GetTimeFromOtherDate(DateTime startDate, DateTime endDate)
         {
-            Time time = new Time();
+            TimeParser time = new TimeParser();
             TimeSpan tempTS = endDate.Subtract(startDate);
             time.Hours += startDate.Hour < 14 ? tempTS.Hours - 1 : tempTS.Hours;
             time.Minutes += tempTS.Minutes;
@@ -139,8 +139,8 @@ namespace tpe
                     if (temp[0] != "Id")
                         records.Add(new Record(uint.Parse(temp[0]),
                             DateTimeOffset.FromUnixTimeSeconds(long.Parse(temp[1])),
-                            Time.Parse(temp[2]),
-                            Time.Parse(temp[3])));
+                            TimeParser.Parse(temp[2]),
+                            TimeParser.Parse(temp[3])));
                 }
                 return true;
             }

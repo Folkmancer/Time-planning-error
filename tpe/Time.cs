@@ -5,31 +5,32 @@ using System.Text.RegularExpressions;
 
 namespace tpe
 {
-    public class Time
+    public class TimeParser
     {
         private static string regDays = @"(\d+(?=[dD]))";
         private static string regHours = @"(\d+(?=[hH]))";
         private static string regMinuts = @"(\d+(?=[mM]))";
         private static string regexTime = @"(\b\d+[dD]\b)|(\b\d+[hH]\b)|(\b\d+[mM]\b)|(\b\d+[dD]\d+[hH]\b)|(\b\d+[dD]\d+[mM]\b)|(\b\d+[hH]\d+[mM]\b)|(\b\d+[dD]\d+[hH]\d+[mM]\b)";
 
-        private int days;
         private int hours;
         private int minutes;
 
-        public int Days { get => days; set => days = value; }
+        public int Days { get; set; }
+
         public int Hours 
         {
             get => hours;
             set {
                 if (value > 7)
                 {
-                    days += value / 8;
+                    Days += value / 8;
                     hours = value % 8;
                 }
                 else
                     hours = value;
             }
         }
+
         public int Minutes 
         {
             get => minutes;
@@ -45,9 +46,9 @@ namespace tpe
             }
         }
 
-        public static bool TryParse(string timeIn, out Time timeOut)
+        public static bool TryParse(string timeIn, out TimeParser timeOut)
         {
-            timeOut = new Time();
+            timeOut = new TimeParser();
             if (Regex.IsMatch(timeIn, regexTime) || timeIn == "")
             {
                 Match matchDays = Regex.Match(timeIn, regDays);
@@ -62,9 +63,9 @@ namespace tpe
                 return false;   
         }
 
-        public static Time Parse(string timeIn)
+        public static TimeParser Parse(string timeIn)
         {
-            if (!TryParse(timeIn, out Time timeOut))
+            if (!TryParse(timeIn, out TimeParser timeOut))
                 throw new FormatException();
             else
                 return timeOut;
