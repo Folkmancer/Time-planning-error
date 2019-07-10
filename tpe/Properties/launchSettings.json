@@ -1,7 +1,8 @@
 {
   "profiles": {
     "tpe": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "close 5849"
     }
   }
 }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace tpe
 {
-    class Data
+    public class Data
     {
         public string Path { get; set; }
         public List<Record> records = new List<Record>();
@@ -17,7 +17,7 @@ namespace tpe
             Path = path;
         }
 
-        public bool Add(Record record)
+        public bool Open(Record record)
         {
             if (!records.Exists(x => x.Id == record.Id))
             {
@@ -42,14 +42,50 @@ namespace tpe
 
         public bool Close(uint id)
         {
-           /* Record temp = Find(id);
+            Record temp = Find(id);
             if (temp != null)
             {
+                Time time = new Time();
+                DateTime startDate = temp.StartDate.LocalDateTime;
+                DateTime endDate = DateTimeOffset.Now.LocalDateTime;
+                if (startDate.Date != endDate.Date)
+                    time = GetTimeFromSameDate(startDate, endDate);
+                else
+                    time = GetTimeFromOtherDate(startDate, endDate);
                 records[records.IndexOf(temp)].RealWorkTime = time;
                 return true;
             }
             else
-                return false;*/
+                return false;
+        }
+
+        private Time GetTimeFromSameDate(DateTime startDate, DateTime endDate)
+        {
+            Time time = new Time();
+            TimeSpan tempTS = startDate.Date.AddHours(19).Subtract(startDate);
+            time.Hours += tempTS.Hours;
+            time.Minutes += tempTS.Minutes;
+            tempTS = (endDate.Hour > 10) ? (endDate.Subtract(endDate.Date.AddHours(10))) : (endDate.Subtract(endDate.Date) + TimeSpan.FromHours(5));
+            time.Hours += tempTS.Hours;
+            time.Minutes += tempTS.Minutes;
+            startDate = startDate.AddDays(1);
+            while (startDate.Date < endDate.Date)
+            {
+                if (startDate.DayOfWeek != DayOfWeek.Saturday
+                    && startDate.DayOfWeek != DayOfWeek.Sunday)
+                    time.Days += 1;
+                startDate = startDate.AddDays(1);
+            }
+            return time;
+        }
+
+        private Time GetTimeFromOtherDate(DateTime startDate, DateTime endDate)
+        {
+            Time time = new Time();
+            TimeSpan tempTS = endDate.Subtract(startDate);
+            time.Hours += startDate.Hour < 14 ? tempTS.Hours - 1 : tempTS.Hours;
+            time.Minutes += tempTS.Minutes;
+            return time;
         }
 
         public bool Remove(Record record)
@@ -78,7 +114,7 @@ namespace tpe
                     ((record.Inaccuracy != null) ? (Math.Round((double)record.Inaccuracy, 4)).ToString(CultureInfo.GetCultureInfo("en-US")) : "unknown") + " ");
             }
             var temp = records.Where(x => x.Inaccuracy != null).Select(x => x.Inaccuracy);
-            Console.WriteLine("\n" + "Avg:".PadLeft(49).PadRight(56) + (Math.Round((double)(temp.Sum() / temp.Count()), 4)).ToString(CultureInfo.GetCultureInfo("en-US")));
+            Console.WriteLine("\nAvg:".PadLeft(49).PadRight(56) + (Math.Round((double)(temp.Sum() / temp.Count()), 4)).ToString(CultureInfo.GetCultureInfo("en-US")));
         }
 
         public void ToFile()
@@ -87,11 +123,7 @@ namespace tpe
             lines.AppendLine("Id,Start Date,Planned Time,Real Time,Inaccuracy");
             foreach (Record record in records)
             {
-                lines.AppendLine(record.Id + ","
-                + record.StartDate.ToUnixTimeSeconds() + ","
-                + record.PlannedWorkTime + ","
-                + record.RealWorkTime + ","
-                + ((record.Inaccuracy != null) ? (Math.Round((double)record.Inaccuracy, 4)).ToString(CultureInfo.GetCultureInfo("en-US")) : "")); 
+                lines.AppendLine(record.ToString()); 
             }
             File.WriteAllText(Path, lines.ToString());
         }

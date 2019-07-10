@@ -2,7 +2,7 @@
 
 namespace tpe
 {
-    class Record
+    public class Record
     {
         public uint Id { get; set; }
         public DateTimeOffset StartDate { get; set; }
@@ -37,12 +37,11 @@ namespace tpe
 
         public override string ToString()
         {
-            return this.Id + "," + this.StartDate + ",";
-        }
-
-        public void Close(Time real)
-        {
-            this.RealWorkTime = real;
+            return Id + ","
+                + StartDate.ToUnixTimeSeconds() + ","
+                + PlannedWorkTime + ","
+                + RealWorkTime + ","
+                + ((Inaccuracy != null) ? (Math.Round((double)Inaccuracy, 4)).ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US")) : "");
         }
     }
 }
