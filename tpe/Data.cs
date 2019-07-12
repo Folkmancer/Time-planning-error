@@ -123,7 +123,7 @@ namespace tpe
             lines.AppendLine("Id,Start Date,Planned Time,Real Time,Inaccuracy");
             foreach (Record record in records)
             {
-                lines.AppendLine(record.ToString()); 
+                lines.AppendLine(record.ToCSV()); 
             }
             File.WriteAllText(Path, lines.ToString());
         }

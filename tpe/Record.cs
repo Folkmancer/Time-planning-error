@@ -35,7 +35,7 @@ namespace tpe
             RealWorkTime = real;
         }
 
-        public override string ToString()
+        public string ToCSV()
         {
             return Id + ","
                 + StartDate.ToUnixTimeSeconds() + ","
