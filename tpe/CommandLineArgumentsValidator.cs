@@ -1,56 +1,35 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace tpe
+﻿namespace tpe
 {
     static class CommandLineArgumentsValidator
     {
-        static string regexFlag = @"-[d]";
-
-        public static bool IsOpenTaskWithDataFlagAndRealTime(string[] args)
+        public static bool IsOpenCommand(string[] args)
         {
-            bool result = args.Length == 6
-                 && Regex.IsMatch(args[1], regexFlag)
-                 && uint.TryParse(args[2], out uint idTask)
-                 && DateTime.TryParse(args[3], out DateTime startDateWork)
-                 && TimeParser.TryParse(args[4], out TimeParser plannedWorkTime)
-                 && TimeParser.TryParse(args[5], out TimeParser realWorkTime);
-            return result;
+            return (args.Length >= 3 && args.Length <= 6) && args[0] == "open";
         }
 
-        public static bool IsOpenTaskWithDataFlagAndNoRealTime(string[] args)
+        public static bool IsCloseCommand(string[] args)
         {
-            bool result = args.Length == 5
-                && Regex.IsMatch(args[1], regexFlag)
-                && uint.TryParse(args[2], out uint idTask)
-                && DateTime.TryParse(args[3], out DateTime startDateWork)
-                && TimeParser.TryParse(args[4], out TimeParser plannedWorkTime);
-            return true;
+            return (args.Length == 2 || args.Length == 3) && args[0] == "close";
         }
 
-        public static bool IsOpenTaskWithNoDataFlagAndRealTime(string[] args)
+        public static bool IsDeleteCommand(string[] args)
         {
-            bool result = args.Length == 4
-                && uint.TryParse(args[1], out uint idTask)
-                && TimeParser.TryParse(args[2], out TimeParser plannedWorkTime)
-                && TimeParser.TryParse(args[3], out TimeParser realWorkTime);
-            return true;
+            return args.Length == 2 && args[0] == "del";
         }
 
-        public static bool IsOpenTaskWithNoDataFlagAndNoRealTime(string[] args)
+        public static bool IsShowCommand(string[] args)
         {
-            bool result = args.Length == 3
-                && uint.TryParse(args[1], out uint idTask)
-                && TimeParser.TryParse(args[2], out TimeParser plannedWorkTime);
-            return true;
+            return args.Length == 1 && args[0] == "show";
         }
 
-        public static bool IsOpenTaskWithNoDataFlagAndNoRealTime(string[] args)
+        public static bool IsHelpCommand(string[] args)
         {
-            bool result = args.Length == 3
-                && uint.TryParse(args[1], out uint idTask)
-                && TimeParser.TryParse(args[2], out TimeParser plannedWorkTime);
-            return true;
+            return args.Length == 2 && args[0] == "help";
+        }
+
+        public static bool IsListCommand(string[] args)
+        {
+            return args.Length == 1 && args[0] == "list";
         }
     }
 }

@@ -12,12 +12,12 @@ namespace tpe
         private static string regMinuts = @"(\d+(?=[mM]))";
         private static string regexTime = @"(\b\d+[dD]\b)|(\b\d+[hH]\b)|(\b\d+[mM]\b)|(\b\d+[dD]\d+[hH]\b)|(\b\d+[dD]\d+[mM]\b)|(\b\d+[hH]\d+[mM]\b)|(\b\d+[dD]\d+[hH]\d+[mM]\b)";
 
-        private int hours;
-        private int minutes;
+        private static int hours;
+        private static int minutes;
 
-        public int Days { get; set; }
+        public static int Days { get; set; }
 
-        public int Hours 
+        public static int Hours 
         {
             get => hours;
             set {
@@ -31,7 +31,7 @@ namespace tpe
             }
         }
 
-        public int Minutes 
+        public static int Minutes 
         {
             get => minutes;
             set 
@@ -46,43 +46,45 @@ namespace tpe
             }
         }
 
-        public static bool TryParse(string timeIn, out TimeParser timeOut)
+        public static bool TryParse(string timeIn, out TimeSpan timeOut)
         {
-            timeOut = new TimeParser();
+            timeOut = new TimeSpan();
             if (Regex.IsMatch(timeIn, regexTime) || timeIn == "")
             {
                 Match matchDays = Regex.Match(timeIn, regDays);
                 Match matchHours = Regex.Match(timeIn, regHours);
                 Match matchMinuts = Regex.Match(timeIn, regMinuts);
-                timeOut.Days = matchDays.Success ? int.Parse(matchDays.Value) : 0;
-                timeOut.Hours = matchHours.Success ? int.Parse(matchHours.Value) : 0;
-                timeOut.Minutes = matchMinuts.Success ? int.Parse(matchMinuts.Value) : 0;
+                Minutes = matchMinuts.Success ? int.Parse(matchMinuts.Value) : 0;
+                Hours = matchHours.Success ? int.Parse(matchHours.Value) : 0;
+                Days = matchDays.Success ? int.Parse(matchDays.Value) : 0;
+                timeOut = TimeSpan.FromDays(Days) + TimeSpan.FromHours(Hours) + TimeSpan.FromMinutes(Minutes);
                 return true;
             }
             else
                 return false;   
         }
 
-        public static TimeParser Parse(string timeIn)
+        public static TimeSpan Parse(string timeIn)
         {
-            if (!TryParse(timeIn, out TimeParser timeOut))
+            if (!TryParse(timeIn, out TimeSpan timeOut))
                 throw new FormatException();
             else
                 return timeOut;
         }
 
-        public double ToMinutes()
-        {
-            return (Days * 8 * 60) + Hours * 60 + Minutes;
-        }
-
-        public override string ToString()
+        public static string ToCSV(TimeSpan timeIn)
         {
             StringBuilder temp = new StringBuilder();
-            if (Days != 0) temp.Append(Days + "d");
-            if (Hours != 0) temp.Append(Hours + "h");
-            if (Minutes != 0) temp.Append(Minutes + "m");
-            return (temp != null) ? temp.ToString() : "unknown";
+            if (timeIn.Days != 0) temp.Append(timeIn.Days + "d");
+            if (timeIn.Hours != 0) temp.Append(timeIn.Hours + "h");
+            if (timeIn.Minutes != 0) temp.Append(timeIn.Minutes + "m");
+            return temp.ToString();
+        }
+
+        public static string ToString(TimeSpan timeIn)
+        {
+            string temp = ToCSV(timeIn);
+            return (temp.Length != 0) ? temp.ToString() : "unknown";
         }
     }
 }
